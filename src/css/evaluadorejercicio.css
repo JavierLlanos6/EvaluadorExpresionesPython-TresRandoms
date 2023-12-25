@@ -1,0 +1,49 @@
+.SubirArchivo{
+    background-color: #0c151c;
+}
+.ejercicio{
+    color:white;
+    font-size: 1.8rem;
+}
+.cargararchivo input{
+    background-color: #0c151c;
+    color:rgba(255, 255, 255, 0.685)
+}
+.cargararchivo{
+    display: flex;
+}
+.interrogacion{
+    margin: auto;
+    background-color: rgba(255, 255, 255, 0.616);
+    padding: 3px 13px;
+    border-radius: 50px;
+    color: black;
+}
+.texto {
+    display: none;
+    position: absolute;
+    top: 20%;
+    left: 65%;
+    background-color: white; /* Puedes ajustar el color de fondo según tus necesidades */
+    z-index: 1; /* Asegura que esté encima de los otros elementos */
+    padding: 10px; /* Ajusta el espaciado según sea necesario */
+    height: 90px;
+    width: 300px;
+    border-radius: 20px;
+}
+
+.interrogacion:hover + .texto {
+    display: block; /* Muestra el texto cuando se pasa el cursor sobre la interrogación */
+  }
+.alerta{
+    color: white;
+}
+.pasos{
+    color: rgba(165, 165, 16, 0.938);
+}
+.lista{
+    color: white;
+}
+footer{
+    margin-top: 35%;
+}

@@ -19,7 +19,12 @@ function App() {
 
   return (
     <div className="App">
-      <CargarArchivo onFileUpload={handleFileUpload} />
+      <div className="inicio">
+        <h1>Evaluador de expresiones Matemáticas</h1>
+      </div>
+      <div className="archivo">
+        <CargarArchivo onFileUpload={handleFileUpload} />
+      </div>
       <EvaluadorEjercicio exercise={exercise} />
     </div>
   );
