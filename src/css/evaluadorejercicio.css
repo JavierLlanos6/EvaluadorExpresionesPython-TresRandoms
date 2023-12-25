@@ -1,9 +1,12 @@
+.SubirArchivo{
+    background-color: #0c151c;
+}
 .ejercicio{
     color:white;
     font-size: 1.8rem;
 }
 .cargararchivo input{
-    background-color: rgba(0, 0, 68, 0.623);
+    background-color: #0c151c;
     color:rgba(255, 255, 255, 0.685)
 }
 .cargararchivo{

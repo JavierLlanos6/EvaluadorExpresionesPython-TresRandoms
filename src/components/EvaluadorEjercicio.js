@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import '../css/evaluadorejercicio.css';
+import "../css/evaluadorejercicio.css";
 
 const EvaluadorEjercicio = ({ exercise }) => {
   const [currentExercise, setCurrentExercise] = useState(exercise);
@@ -29,59 +29,97 @@ const EvaluadorEjercicio = ({ exercise }) => {
     const regex = new RegExp(`([-+]?\\d+)\\s*\\${operation}\\s*([-+]?\\d+)`);
     let match = currentExercise.match(regex);
 
-    if (!match) {
-      showAlert("No se encontró la operación en el formato correcto");
-      return;
-    }
-
     clearAlert(); // Limpiar el mensaje de alerta antes de realizar la operación
 
-    const leftOperand = parseInt(match[1], 10);
-    const rightOperand = parseInt(match[2], 10);
+    if (match) {
+      const leftOperand = parseInt(match[1], 10);
+      const rightOperand = parseInt(match[2], 10);
 
-    let result;
-    switch (operation) {
-      case "+":
-        result = leftOperand + rightOperand;
-        break;
-      case "-":
-        result = leftOperand - rightOperand;
-        break;
-      case "*":
-        result = leftOperand * rightOperand;
-        break;
-      case "/":
-        result = leftOperand / rightOperand;
-        break;
-      default:
-        break;
-    }
-
-    // Guardar el ejercicio actual en el historial
-    setExerciseHistory([...exerciseHistory, currentExercise]);
-
-    // Actualizar el ejercicio actual
-    let newExercise = currentExercise.replace(
-      regex,
-      result >= 0 ? `${result}` : `${result}`
-    );
-
-    // Verificar si la expresión contiene paréntesis
-    if (newExercise.includes("(")) {
-      // Encontrar el primer paréntesis que contenga el resultado de la operación
-      const parenthesisRegex = new RegExp(`\\(${result}\\)`);
-      const parenthesisMatch = newExercise.match(parenthesisRegex);
-
-      if (parenthesisMatch) {
-        // Eliminar los paréntesis
-        newExercise = newExercise.replace(parenthesisRegex, result);
+      // Verificar jerarquía de operaciones
+      if (currentExercise.includes("(")) {
+        // Encontrar la operación dentro del paréntesis
+        const parenthesisRegex = /\(([^)]+)\)/;
+        const parenthesisMatch = currentExercise.match(parenthesisRegex);
+        if (parenthesisMatch) {
+          if (
+            (operation === "+" || operation === "-") &&
+            (parenthesisMatch.includes("*") || parenthesisMatch.includes("/"))
+          ) {
+            showAlert("Debes seguir la jerarquía de las operaciones");
+            return;
+          } else if (operation === "/" && parenthesisMatch.includes("*")) {
+            showAlert("Debes seguir la jerarquía de las operaciones");
+            return;
+          } else if (operation === "+" && parenthesisMatch.includes("-")) {
+            showAlert("Debes seguir la jerarquía de las operaciones");
+            return;
+          }
+        }
+      } else if (
+        (operation === "+" || operation === "-") &&
+        (currentExercise.includes("*") || currentExercise.includes("/"))
+      ) {
+        showAlert("Debes seguir la jerarquía de las operaciones");
+        return;
+      } else if (operation === "/" && currentExercise.includes("*")) {
+        showAlert("Debes seguir la jerarquía de las operaciones");
+        return;
+      } else if (operation === "+" && currentExercise.includes("-")) {
+        showAlert("Debes seguir la jerarquía de las operaciones");
+        return;
       }
-    }
 
-    // Reemplazar doble signo negativo por signo positivo (globalmente)
-    newExercise = newExercise.replace("- -", "+ ");
-    setCurrentExercise(newExercise);
-    console.log("Nuevo ejercicio: ", newExercise);
+      let result;
+      switch (operation) {
+        case "+":
+          // Ajustar el resultado considerando el valor de la operación a la izquierda
+          if (match[0].includes("+")) {
+            result = leftOperand + rightOperand;
+          } else {
+            result = leftOperand + rightOperand;
+          }
+          break;
+        case "-":
+          // Ajustar el resultado considerando el valor de la operación a la izquierda
+          result = leftOperand - rightOperand;
+          break;
+        case "*":
+          result = leftOperand * rightOperand;
+          break;
+        case "/":
+          result = leftOperand / rightOperand;
+          break;
+        default:
+          break;
+      }
+
+      // Guardar el ejercicio actual en el historial
+      setExerciseHistory([...exerciseHistory, currentExercise]);
+
+      // Reemplazar las operaciones de suma y resta a la izquierda de la operación seleccionada
+      let newExercise = currentExercise.replace(
+        regex,
+        result >= 0 ? `${result}` : `${result}`
+      );
+
+      // Verificar si la expresión contiene paréntesis
+      if (newExercise.includes("(")) {
+        // Encontrar el primer paréntesis que contenga el resultado de la operación
+        const parenthesisRegex = new RegExp(`\\(${result}\\)`);
+        const parenthesisMatch = newExercise.match(parenthesisRegex);
+
+        if (parenthesisMatch) {
+          // Eliminar los paréntesis
+          newExercise = newExercise.replace(parenthesisRegex, result);
+        }
+      }
+
+      // Reemplazar doble signo negativo por signo positivo (globalmente)
+      newExercise = newExercise.replace("- -", "+ ");
+      setCurrentExercise(newExercise);
+    } else {
+      showAlert("No se encontró la operación en el formato correcto");
+    }
   };
 
   // Función para retroceder al ejercicio anterior
@@ -103,7 +141,9 @@ const EvaluadorEjercicio = ({ exercise }) => {
         <h2 className="pasos">Pasos Anteriores:</h2>
         <ul>
           {exerciseHistory.map((exercise, index) => (
-            <li className="lista" key={index}>{exercise}</li>
+            <li className="lista" key={index}>
+              {exercise}
+            </li>
           ))}
         </ul>
       </div>
@@ -114,10 +154,10 @@ const EvaluadorEjercicio = ({ exercise }) => {
       </button>
       <button onClick={() => handleOperationSelection("/")}>División</button>
       <button onClick={goBack}>Retroceder</button>
-      {/* Otros botones de operaciones según sea necesario */}
-      <footer><p>By Tres Randoms</p></footer>
+      <footer>
+        <p>By TresRandoms</p>
+      </footer>
     </div>
-    
   );
 };
 

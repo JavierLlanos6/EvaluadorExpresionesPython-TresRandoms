@@ -18,13 +18,12 @@ function App() {
   };
 
   return (
-    
     <div className="App">
       <div className="inicio">
-        <h1>Evaluador de expresiones Matematicas</h1>
+        <h1>Evaluador de expresiones Matemáticas</h1>
       </div>
       <div className="archivo">
-      <CargarArchivo onFileUpload={handleFileUpload}/>
+        <CargarArchivo onFileUpload={handleFileUpload} />
       </div>
       <EvaluadorEjercicio exercise={exercise} />
     </div>
