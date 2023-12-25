@@ -1,7 +1,23 @@
+
 .App {
   text-align: center;
+  background-color: #282c34;
 }
-
+body{
+  padding: 0;
+}
+.inicio h1{
+  margin-top: 100px;
+  margin-bottom: 50px;
+  color: rgb(221, 221, 22);
+}
+.archivo{
+  display: flex;
+  justify-content: center;
+}
+html{
+  background-color: #282c34;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -36,3 +52,4 @@
     transform: rotate(360deg);
   }
 }
+
